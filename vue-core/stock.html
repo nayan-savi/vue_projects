@@ -1,0 +1,45 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="store.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body class="container-body">
+  <div id="form-id">
+    <div class="header-border">
+      <span>Cart({{stocks}})</span>
+    </div>
+    <div class="container">
+      <div class="container-product"> 
+        <div class="product-image">
+          <img v-bind:src="image" class="image"/>
+        </div>
+      </div>
+      <div class="container-details">
+        <h1>{{title}}</h1>
+        <div :class="{line: !inStock}">
+          <h3 v-if="inStock">In Stock</h3>
+          <h3 v-else >Out of Stock</h3>
+        </div>
+        <h4>₹{{price}}</h4>
+        <ul>
+          <li v-for="detail in products.details">{{detail}}</li>
+        </ul>
+        <div v-for="(variant, index) in products.variants" 
+            :key="variant.id"
+            @mouseover="updateProduct(index)" 
+            class="color-box"
+            :style="{backgroundColor: variant.color}">
+        </div>
+        <div class="carts">
+          <button :class="{disabled : !inStock}"
+           v-on:click="addToCart" :disabled="!inStock">ADD TO CART</button>
+        </div>
+      </div>
+  </div>
+  </div>
+  <script src="stock.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="index.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+    <body>
+    	<div class="container">
+
+        <div id="form-id">
+          First Name: <input v-model="firstName" />
+          Last Name: <input v-model="lastName" />
+          <button v-on:click="save">Save</button>
+        </div>
+
+    		<script src="form.js"></script>
+    	</div>
+    </body>
+</html>

@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="index.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    </head>
+    <body>
+
+	<div class="container">
+		<div id="app">
+			<h1>{{ message }}</h1>
+		</div>
+		<div id="app-2">
+		  <span :title="message">
+			     Hover your mouse over me for a few seconds see my dynamically bound title!
+		  </span>
+		</div>
+
+		<div id="app-3">
+			<span v-if="isSeen">Now you see me!</span>
+		</div>
+
+		<div id="app-4">
+			<ol>
+				<li v-for="todo in todos">
+					{{todo}}
+				</li>
+			</ol>
+			<p>{{message}}</p>
+			<button v-on:click="reverseMessage">Reverse Message</button>
+		</div>
+
+		<div id="app-5">
+			Username:<input v-model="username" />
+			<button v-on:click="sayHi">Invite</button>
+		</div>
+
+		<div id="app-6">
+			<p>Count: {{counter}}<p>
+			<button v-on:click="increment">Increment</button>
+			<button v-on:click="decrement">Decrement</button>
+			<button v-on:click="increment10">Increment10</button>
+		</div>
+		<script src="index.js"></script>
+
+	</div>
+
+
+
+
+
+
+    </body>
+</html>
