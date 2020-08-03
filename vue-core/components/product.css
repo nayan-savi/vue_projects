@@ -12,7 +12,7 @@
     display: grid;
     align-items: center;
     padding-right: 10px;
-    color: white;
+    color: black;
     
   }
   
@@ -44,6 +44,11 @@
     padding-left: 80px;
     font-size: 16px;
     font-weight: bold;
+    width: 400px;
+  }
+
+  .container-cart {
+    width: 400px;
   }
 
   .container-product{
@@ -57,9 +62,7 @@
   
   .product-image {
     border: 1px solid;
-    padding: 30px;
-    width: 315px;
-    
+    padding: 30px;   
   }
   
   .variants{
@@ -120,18 +123,46 @@
   }
   
 .user-deatils {
-  margin: 10px 60px;
   width: 400px;
 }
 
 table > tr > th {
-  text-align: right;
+  text-align: left;
+  padding-left: 10px;
 }
 
-table > tr > td{
+table > tr > td {
   text-align: left;
 }
 
 .premium {
   color: green;
+}
+
+.userCart {
+  border: 1px solid;
+  margin: 10px;
+  width: 95%;
+}
+
+.userCart > tr > td {
+  width: 20%;
+  text-align: center;
+}
+
+.userImage {
+  width:70px;
+  height: 70px;
+}
+
+.price {
+  padding-left: 20px;
+  font-size: 20px;
+}
+
+.total {
+  font-size: 20px;
+  font-weight: bolder;
+  text-align: right;
+  margin: 10px;
 }

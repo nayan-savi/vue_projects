@@ -7,11 +7,10 @@
 
 <body class="container-body">
     <div id="form-id">
-        <product></product>
+        <product @add-to-cart="updateCart" :carts="carts"></product>
     </div>
-
+    
     <script src="product.js"></script>
 </body>
-
 
 </html>

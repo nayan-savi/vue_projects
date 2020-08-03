@@ -1,25 +1,25 @@
 Vue.component('product', {
     data() {
         return {
-            stocks: 0,
-            shippingCost: 40,
             selectedUser: 0,
             users: [
                 {
                     name: 'Nayan Kumar',
                     contactNo: '7894563210',
                     isPremium: true,
-                    shippingAddress: '#202, 2nd Floor, Wing West Apartment, Bangalore-560068'
+                    shippingAddress: '#202, 2nd Floor, Wing West Apartment, Bangalore-560068',
+                    userCarts: [],
                 },
                 {
                     name: 'Rahul Sing',
                     contactNo: '9876543315',
                     isPremium: false,
-                    shippingAddress: '#42, G1, Vue Wing Apartment, Bangalore-560048'
+                    shippingAddress: '#42, G1, Vue Wing Apartment, Bangalore-560048',
+                    userCarts: [],
                 }
             ],
             products: {
-                brand: 'Nick',
+                brand: 'Nike',
                 productName: 'T-Shirt',
                 selectedVariant: 1,
                 details: ["Half Sleeves", "Round Neckline", "100% cotton", "Stretchy, light and inexpensive"],
@@ -29,6 +29,7 @@ Vue.component('product', {
                         color: 'black',
                         varientImage: '../images/image-black.png',
                         price: 600,
+                        shippingCost: 40,
                         quantity: 10,
                     },
                     {
@@ -36,6 +37,7 @@ Vue.component('product', {
                         color: 'orange',
                         varientImage: '../images/image-orange.png',
                         price: 800,
+                        shippingCost: 60,
                         quantity: 5,
                     },
                     {
@@ -43,7 +45,8 @@ Vue.component('product', {
                         color: 'green',
                         varientImage: '../images/image-green.png',
                         price: 500,
-                        quantity: 0,
+                        shippingCost: 90,
+                        quantity: 2,
                     }
 
                 ]
@@ -52,14 +55,22 @@ Vue.component('product', {
     },
     methods: {
         addToCart() {
-            this.stocks += 1;
+            let newCart = Object.assign({}, this.products.variants[this.products.selectedVariant]);
+            this.products.variants[this.products.selectedVariant].quantity--;
+            this.$emit('add-to-cart', newCart, this.user);
         },
-
         updateProduct(index) {
             this.products.selectedVariant = index;
         },
         updateUser(index) {
             this.selectedUser = index;
+        },
+        getTotal(cart) {
+            let total = 0;
+            cart.forEach(e => {
+                total += e.price * e.quantity + e.shippingCost
+            });
+            return total;
         }
     },
     computed: {
@@ -70,21 +81,25 @@ Vue.component('product', {
             return this.products.variants[this.products.selectedVariant];
         },
         shipping() {
-            return this.users[this.selectedUser].isPremium ? "Free" : "40";
+            return this.users[this.selectedUser].isPremium ? "Free" : this.product.shippingCost;
         },
         user() {
             return this.users[this.selectedUser];
         },
         premiumUser() {
             return this.users[this.selectedUser].isPremium ? "Premium" : "Not Premium";
-        },
+        }
 
     },
-
+    props: {
+        carts: {
+            type: Array
+        }
+    },
     template: `
     <div class="product" >
         <div class="header-border">
-            <span>Cart({{stocks}})</span>
+            <span>Cart({{user.userCarts.length}})</span>
         </div>
         <div class="box">
             <select v-model="selectedUser" @change="updateUser(selectedUser)">
@@ -102,20 +117,13 @@ Vue.component('product', {
                 <div class="user-deatils">
                     <table>
                         <tr>
-                            <th>Name:</th>
-                            <td>{{user.name}}</td>
+                            <th>{{user.name}}</th>
                         </tr>
                         <tr>
-                            <th>User:</th>
-                            <td>{{premiumUser}}</td>
-                        </tr>
-                        <tr>
-                            <th>ContactNo:</th>
-                            <td>{{user.contactNo}}</td>
-                        </tr>
-                        <tr>
-                            <th>Adress:</th>
                             <td>{{user.shippingAddress}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{user.contactNo}}</td>
                         </tr>
                     </table>
                 </div>
@@ -126,10 +134,10 @@ Vue.component('product', {
                     <h3 v-if="product.quantity > 0">In Stock</h3>
                     <h3 v-else>Out of Stock</h3>
                 </div>
-                <h4>Rs.{{product.price}}</h4>
+                <h2>&#8377;{{product.price}}</h2>
                 <div>
                     <h3 v-if="user.isPremium" :class="{premium: user.isPremium}">Shipping: {{shipping}}</h3>
-                    <h3 v-else>Shipping: Rs.{{shipping}}</h3>
+                    <h3 v-else>Shipping: &#8377;{{shipping}}</h3>
                     <h3>Quantity: {{product.quantity}}</h3>
                 </div>
                 <ul>
@@ -142,14 +150,57 @@ Vue.component('product', {
                     <button :class="{disabled : !product.quantity > 0}" v-on:click="addToCart" :disabled="!product.quantity > 0">ADD TO
                         CART</button>
                 </div>
+            </div>    
+            <div class="container-cart">
+               <div v-if="user.userCarts.length > 0">
+                    <div v-for="cart in user.userCarts">
+                        <table class="userCart">
+                            <tr>
+                                <th>
+                                    <div>{{title}}</div><br/>
+                                    <div class="price">&#8377;{{cart.price * cart.quantity + cart.shippingCost}}</div>
+                                </th>
+                                <td><img v-bind:src="cart.varientImage" class="userImage" /></td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <td>Qty: {{cart.quantity}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="total">
+                        Total: &#8377;{{getTotal(user.userCarts)}}
+                    </div>
+               </div>
             </div>
-            
         </div>
-        
     </div>
     `
 })
 
 var stocks = new Vue({
     el: '#form-id',
+    data: {
+        carts: [],
+    },
+    methods: {
+        updateCart(cart, user) {
+            if(user.isPremium) {
+                cart.shippingCost = 0;
+            }
+            if (user.userCarts.length > 0) {
+                let cartObj = user.userCarts.find(c => c.id == cart.id);
+                if (cartObj != undefined) {
+                    cartObj.quantity += 1;
+                } else {
+                    cart.quantity = 1;
+                    user.userCarts.push(cart);
+                }
+            } else {
+                cart.quantity = 1;
+                user.userCarts.push(cart);
+            }
+            
+        }
+    }
 });
