@@ -99,7 +99,7 @@ Vue.component('product', {
     template: `
     <div class="product" >
         <div class="header-border">
-            <span>Cart({{user.userCarts.length}})</span>
+            <span>Cart({{!user ? 0 :user.userCarts.length}})</span>
         </div>
         <div class="box">
             <select v-model="selectedUser" @change="updateUser(selectedUser)">
